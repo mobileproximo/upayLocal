@@ -1,0 +1,65 @@
+<img *ngIf="inCommingData.operation=='Connexion' || glb.modeTransactionnel==false" class="p-img p-img-connexion" style="margin-top: 10px !important ;width:70% !important;" src="assets/imgs/upay.png" alt="logo">
+<h4 style="color: #639dd5" *ngIf="inCommingData.operation=='Connexion'" style="font-weight: bold;" text-center margin-vertical>{{ inCommingData.operation }}</h4>
+
+<ion-card padding="" style="border-radius: 10px; margin:auto !important" *ngIf="inCommingData && inCommingData.montant && inCommingData.montant!='RAS'">
+    <h5 style="color: #639dd5"  text-center margin-vertical>{{ inCommingData.operation }}</h5>
+    <ion-list>
+        <span *ngIf="inCommingData.telephone && inCommingData.telephone!='RAS'">
+            <ion-item lines="none">
+                <ion-label>{{inCommingData.label}} </ion-label>:
+                <ion-label style="font-weight: bold;">{{inCommingData.telephone}} </ion-label>
+            </ion-item>
+        </span>
+          <ion-item lines="none" >
+                <ion-label>Montant TTC </ion-label>:
+                <ion-label style="font-weight: bold;">{{inCommingData.montant}}F CFA</ion-label>
+          </ion-item>
+    </ion-list>
+
+</ion-card>
+
+  <h6 style="color: #639dd5" text-center margin-vertical>{{ pagetitle }}</h6>
+  <div text-center large margin-vertical>
+     <ion-icon color="proximo" [name]="pin.length>0 ? 'radio-button-on' : 'radio-button-off'"></ion-icon>
+    <ion-icon color="proximo"  [name]="pin.length>1 ? 'radio-button-on' : 'radio-button-off'"></ion-icon>
+    <ion-icon color="proximo"   [name]="pin.length>2 ? 'radio-button-on' : 'radio-button-off'"></ion-icon>
+    <ion-icon color="proximo"  [name]="pin.length>3 ? 'radio-button-on' : 'radio-button-off'"></ion-icon>
+  </div>
+  <div>
+    <ion-grid text-center>
+
+          <ion-row >
+              <ion-col size="4" *ngFor="let tab of taba">
+                  <ion-button  shape="round" (click)="handleInput(tab)"  size="large" Fill="outline" color="proximo">{{tab}}</ion-button>
+
+            </ion-col>
+          </ion-row>
+          <ion-row >
+              <ion-col size="4" *ngFor="let tab of tabb">
+                  <ion-button (click)="handleInput(tab)"  shape="round" Fill="outline" size="large" color="proximo">{{tab}}</ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row >
+              <ion-col size="4" *ngFor="let tab of tabc">
+                  <ion-button (click)="handleInput(tab)"  shape="round" Fill="outline" size="large" color="proximo">{{tab}}</ion-button>
+
+             </ion-col>
+          </ion-row>
+      <ion-row>
+        <ion-col size="4">
+            <ion-button (click)="handleInput('ok')" style=""  shape="round" Fill="outline"  size="large" color="proximo">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+            </ion-button>
+       </ion-col>
+          <ion-col size="4">
+              <ion-button (click)="handleInput(lastnumer)"  shape="round" Fill="outline" size="large" color="proximo">{{lastnumer}}</ion-button>
+
+        </ion-col>
+          <ion-col  size="4">
+              <ion-button  (click)="handleInput('clear')"  shape="round" Fill="outline" size="large" color="proximo"><ion-icon name="backspace"></ion-icon></ion-button>
+         </ion-col>
+
+      </ion-row>
+    </ion-grid>
+  </div>
+

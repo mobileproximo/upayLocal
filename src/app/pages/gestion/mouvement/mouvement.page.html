@@ -1,0 +1,48 @@
+<app-header></app-header>
+
+<ion-content>
+  <header-title></header-title>
+  <div class="p-container">
+    <div class="ion-padding p-container-view">
+      <p class="p-img-top logo-etatmouvement"></p>
+      <form class="form list" [formGroup]="critere">
+        <fieldset>
+          <legend>Informations</legend>
+          <ion-item style="border-bottom: 2px solid #639dd5;border-radius: 5px ">
+            <ion-label floating>Date debut</ion-label>
+            <ion-datetime [monthNames]="glb.MONTHS" [dayNames]="glb.DAYS" style="margin-top:16px;"
+              displayFormat="DDDD DD MMMM YYYY" doneText="Choisir" (ionChange)="changedatedeb()" cancelText="Annuler"
+              formControlName="date1"></ion-datetime>
+          </ion-item>
+          <ion-item style="border-bottom: 2px solid #639dd5;border-radius: 5px ">
+            <ion-label floating>Date Fin</ion-label>
+            <ion-datetime [monthNames]="glb.MONTHS" [dayNames]="glb.DAYS" [min]="minDate" style="margin-top:16px;"
+              displayFormat="DDDD DD MMMM YYYY" doneText="Choisir" [disabled]="!critere.controls.date1.valid"
+              (ionChange)="changefin()" cancelText="Annuler" formControlName="date2"></ion-datetime>
+  
+          </ion-item>
+
+          <button style="margin-top: 10px" (click)="listermvt()" [disabled]="critere.invalid" class="p-btn p-btn-jaune button button-small right-buttons">
+            Afficher
+          </button>
+        </fieldset>
+      </form>
+      <ion-card style="margin-left:0px;margin-right:0px;" *ngIf="showdetails">
+        <ion-item *ngFor="let p of operations">
+           <ion-avatar slot="start">
+            <img [src]="p.image">
+          </ion-avatar> 
+          <ion-label style="font-size:14px;font-weight:bold;">Montant: {{p.Montant|millier}} Fcfa
+              <p style="font-size:12px;font-weight:bold;">Solde avant: {{p.Plfav|millier }}</p>
+              <p style="font-size:12px;font-weight:bold;">Solde apres: {{p.Plfap |millier}}</p>
+            <p style="font-size:12px;font-weight:bold;">Date: {{p.Date }}</p>
+            <p style="font-size:12px;font-weight:bold;">Trx: {{p.numtrans }}</p>
+          </ion-label>
+       </ion-item>
+      </ion-card>
+
+
+    </div>
+   <scroll></scroll>
+  </div>
+</ion-content>

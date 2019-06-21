@@ -1,0 +1,97 @@
+
+<div *ngIf="!glb.ShowPin">
+    <form class="list form" name="formJoni" [formGroup]="envoiForm">
+      <fieldset>
+        <legend>Demande frais</legend>
+        <div class="field">
+          <input type="tel" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" formControlName="montant" id="montant" placeholder="Montant">
+          <label for="montant" style="width: 100% !important;">Montant</label>
+        </div>
+  
+        <div class="field">
+          <input type="tel" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" id="frais" readonly formControlName="mntTarif" placeholder="Frais">
+          <label for="frais" style="width: 100% !important;">Frais</label>
+        </div>
+        <div class="field">
+          <input type="tel" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" readonly formControlName="montantTTC" id="montantttc" placeholder="Montant TTC">
+          <label for="montantttc" style="width: 100% !important;">Montant TTC</label>
+        </div>
+  
+        <div class="p-button-group">
+          <button name="calcul" (click)="calculerFrais()"  [disabled]="envoiForm.controls.montant.invalid || envoiForm.controls.idville.invalid" class="p-btn p-btn-jaune button button-small right-buttons">
+            calculer
+          </button>
+          <button class="p-btn p-btn-gris button button-small right-buttons" (click)="reinitialiser()" >
+            Réinitialiser
+          </button>
+        </div>
+      </fieldset>
+  <br>
+    <!-- info expediteur -->
+  <!--
+    <div *ngIf="envoiForm.controls.montantTTC.valid">
+  -->
+    <div *ngIf="showdetails">
+      <fieldset>
+        <legend>Info expediteur</legend>
+        <div class="field">
+          <input type="text" readonly style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" formControlName="prenomExp" id="pnom" placeholder="Prénom">
+          <label for="pnom" style="width: 100% !important;">Prénom</label>
+        </div>
+        <div class="field">
+          <input type="text" readonly style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" formControlName="nomExp" id="nom" placeholder="Nom">
+          <label for="nom" style="width: 100% !important;">Nom</label>
+        </div>
+  
+        <div class="field">
+          <input type="text" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" formControlName="adrsExp" id="adresse" placeholder="Adresse">
+          <label for="adresse" style="width: 100% !important;">Adresse</label>
+        </div>
+  
+        <ion-item style="border-bottom: 2px solid #639dd5;border-radius: 5px " lines="none">
+          <ion-label floating="" style="color:#444 !important;font-family: ubuntuMono !important;">Type pièce</ion-label>
+          <ion-select   formControlName="typIdExp" interface="popover">
+            <ion-select-option  value="1" >CNI</ion-select-option >
+            <ion-select-option  value="2">Passport</ion-select-option >
+            <ion-select-option  value="3">Permis</ion-select-option >
+          </ion-select>
+        </ion-item>
+        <div class="field" style="margin-top: 25px">
+          <input type="text" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" formControlName="idExp" id="piece" placeholder="Num pièce">
+          <label for="piece" style="width: 100% !important;">Num pièce</label>
+        </div>
+  
+      </fieldset>
+      <br>
+      <!-- Info bénéficiaire -->
+      <fieldset>
+        <legend>Info bénéficiaire</legend>
+        <div class="field">
+          <input type="text" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" id="pnomb" formControlName="prenomBen" placeholder="Prénom">
+          <label for="pnomb" style="width: 100% !important;">Prénom</label>
+        </div>
+        <div class="field">
+          <input type="text" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" id="nomb" formControlName="nomBen" placeholder="Nom">
+          <label for="nomb" style="width: 100% !important;">Nom</label>
+        </div>
+        <div class="field">
+          <input type="tel" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" id="telb" formControlName="telBen" placeholder="Téléphone">
+          <label for="telb" style="width: 100% !important;">Téléphone</label>
+        </div>
+  
+        <div class="p-button-group">
+          <button (click)="validerEnvoi()" [disabled]="envoiForm.invalid" class="p-btn p-btn-vert button button-small right-buttons">
+            envoyer
+          </button>
+          <button class="p-btn p-btn-gris button button-small right-buttons" (click)="reinitialiser()">
+            Réinitialiser
+          </button>
+        </div>
+      </fieldset>
+  
+    </div>
+    </form>
+  </div>
+  <codepin class="p-box padding" *ngIf="glb.ShowPin" [inCommingData]="dataForPin"  pagetitle="Entrer votre code Pin" (change)="eventCapture($event)"></codepin>
+  
+  

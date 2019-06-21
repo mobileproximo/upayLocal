@@ -1,0 +1,101 @@
+<!-- Reception bobo -->
+<div *ngIf="!glb.ShowPin">
+    <div >
+      <form class="list form" [formGroup]="cashoutForm" >
+      <fieldset>
+        <legend>Releve</legend>
+        <div class="field">
+          <input type="text" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" (input)="reset()" formControlName="codTrans" id="codetrans" placeholder="Code de Transfert">
+          <label for="codetrans" style="width: 100% !important;">Code de Transfert</label>
+        </div>
+  
+        <div class="p-button-group">
+          <button  (click)="releve()" class="p-btn p-btn-jaune button button-small right-buttons" [disabled]="cashoutForm.controls.codTrans.invalid">
+            Afficher
+          </button>
+          <button class="p-btn p-btn-gris button button-small right-buttons" (click)="vider()">
+            Réinitialiser
+          </button>
+        </div>
+      </fieldset>
+      <br>
+    <!-- info expediteur -->
+    <div *ngIf="showdetails==true">
+      <fieldset>
+        <legend>Infos expediteur</legend>
+        <div class="field">
+          <input type="text" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" id="pnome" formControlName="prenomExp" placeholder="Prénom">
+          <label for="pnome" style="width: 100% !important;">Prénom</label>
+        </div>
+        <div class="field">
+          <input type="text" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" formControlName="nomExp" id="nome" placeholder="Nom">
+          <label for="nome" style="width: 100% !important;">Nom</label>
+        </div>
+        <div class="field">
+          <input type="text" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" formControlName="adrsExp" id="adressee" placeholder="Adresse">
+          <label for="adressee" style="width: 100% !important;">Adresse</label>
+        </div>
+        <div class="field">
+          <input type="tel" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" id="tele" formControlName="telExp" placeholder="Telephone">
+          <label for="tele" style="width: 100% !important;">Telephone</label>
+        </div>
+  
+  
+  
+  
+      </fieldset>
+      <br>
+      <!-- Info bénéficiaire -->
+      <fieldset>
+        <legend>Infos bénéficiaire</legend>
+        <div class="field">
+          <input type="text" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" id="mntpaie" formControlName="mntPaie" placeholder="Montant" readonly>
+          <label for="pnomben" style="width: 100% !important;">Montant</label>
+        </div>
+        <div class="field">
+          <input readonly type="text" formControlName="prenomBen" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" id="pnomben" placeholder="Prénom">
+          <label for="pnomben" style="width: 100% !important;">Prénom</label>
+        </div>
+        <div class="field">
+          <input type="text" formControlName="nomBen" readonly style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" id="nomben" placeholder="Nom">
+          <label for="nomben" style="width: 100% !important;">Nom</label>
+        </div>
+        <div class="field">
+          <input type="text" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" formControlName="adrsBen" name="fullname"  id="adresseben" placeholder="Adresse">
+          <label for="adresseben" style="width: 100% !important;">Adresse</label>
+        </div>
+        <div class="field">
+          <input type="tel" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" formControlName="telBen" readonly  id="telben" placeholder="Téléphone">
+          <label for="telben" style="width: 100% !important;">Téléphone</label>
+        </div>
+        
+        <ion-item style="border-bottom: 2px solid #639dd5;border-radius: 5px ">
+          <ion-label floating="" style="color:#444 !important;font-family: ubuntuMono !important;">Type pièce</ion-label>
+          <ion-select  formControlName="typIdBen" interface="popover" >
+            <ion-select-option value="1" >CNI</ion-select-option>
+            <ion-select-option value="2">Passport</ion-select-option>
+            <ion-select-option value="3">Permis</ion-select-option>
+          </ion-select>
+        </ion-item>
+        <div class="field" style="margin-top:25px;">
+          <input type="text" style="border: none;  border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" formControlName="idBen" id="pieceben" placeholder="Num pièce">
+          <label for="pieceben" style="width: 100% !important;">Num pièce</label>
+        </div>
+  
+  
+        <div class="p-button-group">
+          <button (click)="validerReception()" [disabled]="cashoutForm.controls.idBen.invalid" class="p-btn p-btn-vert button button-small right-buttons">
+            Payer
+          </button>
+          <button class="p-btn p-btn-gris button button-small right-buttons" (click)="vider()">
+            Réinitialiser
+          </button>
+        </div>
+      </fieldset>
+    </div>
+    </form>
+    </div>
+  </div>
+  <codepin class="p-box padding" *ngIf="glb.ShowPin" [inCommingData]="dataForPin"  pagetitle="Entrer votre code Pin" (change)="eventCapture($event)"></codepin>
+  
+  

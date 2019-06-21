@@ -1,0 +1,18 @@
+
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button color="proximo" defaultHref="home"></ion-back-button>
+      </ion-buttons>
+      <h1 id="proxi-header-logo" (click)="vershome()" ><img class="p-header-img"  align="left" src="assets/imgs/upayhorizon.png" alt="proximo"></h1>
+       <ion-buttons slot="end" color="proximo" style="margin-top: 5px !important;">
+          <div >
+        <span  (click)="getPlafond()" style="font-weight: bold; font-size:90%" ><ion-label style="font-size:12px;" color="proximo">Solde: {{glb.HEADER.montant}} FCFA</ion-label><!-- <h6> Solde: {{glb.HEADER.montant}} FCFA</h6> --></span>
+        <ion-button color="proximo" >
+            <ion-icon slot="icon-only" name="refresh"></ion-icon>
+          </ion-button>
+          </div>
+        </ion-buttons> 
+    </ion-toolbar>
+  </ion-header>
+

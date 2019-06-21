@@ -1,0 +1,29 @@
+<app-header></app-header>
+<ion-content>
+        <div class="p-container">
+                <header-title></header-title>
+                <div class="ion-padding p-container-view">
+                  <p class="p-img-top logo-proxicash"></p>
+                  <div *ngIf="!glb.showRecu">
+                      <div *ngIf="!glb.showPin">
+                          <ion-item style="border-bottom: 2px solid #639dd5;border-radius: 5px ">
+                            <ion-label floating="" style="color:#444 !important;font-family: ubuntuMono !important;">Type de Service</ion-label>
+                            <ion-select style="border-top: none" [(ngModel)]="service" interface="popover" >
+                              <ion-select-option value="Envoi" selected>Envoi</ion-select-option>
+                              <ion-select-option value="Réception">Réception</ion-select-option>
+                            </ion-select>
+                          </ion-item>
+                        </div>
+                        <br><br>
+                     <envoi *ngIf="service=='Envoi' && afficheenv" [dataenvoi]="dataenvoi"></envoi>
+                      <reception *ngIf="service=='Réception'" [datareception]="datareception"></reception>
+ 
+                   </div>
+                  <div *ngIf="glb.showRecu">
+                     <recu-transfert></recu-transfert>
+                   </div>
+                </div>
+              </div>
+              <scroll></scroll>
+            
+</ion-content>

@@ -9,3 +9,12 @@
 @import '~@ionic/angular/css/text-alignment.css';
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
+.ion-color-proximo {
+    --ion-color-base: var(--ion-color-proximo) !important;
+    --ion-color-base-rgb: var(--ion-color-proximo-rgb) !important;
+    --ion-color-contrast: var(--ion-color-proximo-contrast) !important;
+    --ion-color-contrast-rgb: var(--ion-color-proximo-contrast-rgb) !important;
+    --ion-color-shade: var(--ion-color-proximo-shade) !important;
+    --ion-color-tint: var(--ion-color-proximo-tint) !important;
+    }
+    

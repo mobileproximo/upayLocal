@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button color="proximo"></ion-back-button>
+    </ion-buttons>
+    <h1 id="proxi-header-logo" ><img class="p-header-img"  align="left" src="assets/imgs/upayhorizon.png" alt="proximo"></h1>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content padding>
+  <br>
+  <img class="p-img p-img-connexion" style="margin-top: 20px !important ;width:50% !important;"  src="assets/imgs/upay.png" alt="logo">
+
+  <div style="margin-top: 30px;display: flex;flex-direction: column">
+    <div style="flex: 1" >
+      <label style="font-size: 16px;text-align: center;display: block;font-weight: 600;" for="">Saisissez le code envoyé par Sms au  </label>
+      <label style="font-size: 16px;text-align: center;display: block;font-weight: 600" for="">{{userdata.login}}</label>
+    </div>
+    <div style="flex: 1;margin-top: 30px;" class="field">
+      <input type="tel" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="codeotp" id="codeotp" [(ngModel)]="codeotp"  placeholder="" maxlength="4">
+      <label for="codeotp" style="width: 100% !important;">Saisir le code</label>
+    </div>
+    <div style="flex: 1" class="field">
+      <div>
+          <ion-button style="color:white !important" (click)="souscription()" [disabled]="!codeotp || codeotp==''" Expand="block" color="proximo">Confirmer</ion-button>
+
+<!--         <button class="p-btn p-btn-jaune button button-small button-block" style="margin-top: 35px;margin-bottom: 20px;font-size: 14px;">Confirmer</button>
+ -->      </div>
+    </div>
+    <div style="flex: 1" class="field">
+        <div>
+          <ion-button style="color:white !important" (click)="generercode()"  Expand="block" color="proximo">Recevoir un autre Code OTP</ion-button>
+
+<!--           <button (click)="generercode()"  class="p-btn p-btn-jaune button button-small button-block" style="margin-top: 35px;margin-bottom: 20px;font-size: 14px;">Recevoir un autre Code OTP</button>
+ -->        </div>
+      </div>
+  </div>
+
+</ion-content>

@@ -1,0 +1,19 @@
+<app-header></app-header>
+<ion-content isScrolling="true">
+    <div class="p-container">
+      <header-title></header-title>
+      <div class="ion-padding p-container-view">
+        <p class="p-img-top logo-orangemoney"></p>
+        <div *ngIf="!glb.showRecu">
+
+          <recharge [datarecharge]="datarecharge" ></recharge>
+        </div>
+        <div *ngIf="glb.showRecu && !glb.ShowPin">
+           <recu-recharge></recu-recharge> 
+        </div>
+      </div>
+  
+    </div>
+    <scroll></scroll>
+  
+  </ion-content>

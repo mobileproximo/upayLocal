@@ -1,0 +1,29 @@
+<app-header></app-header>
+
+<ion-content>
+
+      <div class="p-container">
+          <header-title></header-title>
+          <div class="ion-padding p-container-view">
+            <p class="p-img-top logo-upay"></p>
+            <div *ngIf="!glb.showRecu">
+              <div *ngIf="!glb.ShowPin">
+                <ion-item style="border-bottom: 2px solid #639dd5;border-radius: 10px;margin-bottom:20px; ">
+                  <ion-label floating="" style="color:#444 !important;font-family: ubuntuMono !important;" >Type de Service</ion-label>
+                  <ion-select style="border-top: none" [(ngModel)]="service" interface="popover">
+                    <ion-select-option>Cashin</ion-select-option>
+                    <ion-select-option>Cashout</ion-select-option>
+                  </ion-select>
+                </ion-item>
+              </div>
+              <recharge [datarecharge]="datarecharge" *ngIf="service=='Cashin'"></recharge>
+              <cashin-avec-releve  [cashindata]="datacashin" *ngIf="service=='Cashout'"></cashin-avec-releve>
+            </div>
+            <div *ngIf="glb.showRecu && !glb.ShowPin">
+              <recu-recharge></recu-recharge>
+            </div>
+          </div>
+    
+        </div>
+        <scroll></scroll>
+</ion-content>

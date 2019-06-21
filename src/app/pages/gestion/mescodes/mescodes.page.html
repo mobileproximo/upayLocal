@@ -1,0 +1,30 @@
+<app-header></app-header>
+
+<ion-content>
+    <ion-toolbar class="p-header-title">
+        <img class="p-header-img-service" [src]="glb.HEADERTITELE.src" alt="service">
+  
+    <h3 style="color:#639dd5; font-size:15px;font-weight:bold;" (click)="showPin()">{{ glb.HEADERTITELE.title }}</h3>
+       <ion-buttons slot="primary">
+          <ion-button style="margin-bottom: 5px;" (click)="showPin()" ion-margin shape="round" fill="solid" color="proximo">
+            <ion-icon  [name]="iconName"></ion-icon>
+          </ion-button>
+        </ion-buttons> 
+      </ion-toolbar>
+    <div class="ion-padding p-container-view" *ngIf="!glb.ShowPin && showcodes">
+        <ion-list style="margin-bottom: 50px;">
+           <ion-item *ngFor="let c of mesCodes">
+            <ion-avatar slot="start">
+              <img src="assets/imgs/wallet.png" onerror="this.src='assets/imgs/upay.png';">
+            </ion-avatar>
+            <ion-label style="font-size:15px;font-weight:bold;"><span >{{c.code|formatcode:3:'-'}}</span>
+              <p style="font-size:13px">{{c.date}}</p>
+            </ion-label>
+            <span item-right style="font-size:14px"> {{c.mnt|millier}}Fcfa</span>
+          </ion-item>
+        </ion-list>
+        
+      </div>
+      <codepin class="p-box padding" *ngIf="glb.ShowPin" [inCommingData]="dataForPin" pagetitle="Entrer votre code Pin" (change)="eventCapture($event)"></codepin>
+
+</ion-content>

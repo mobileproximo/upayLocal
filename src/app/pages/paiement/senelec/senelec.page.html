@@ -1,0 +1,97 @@
+<app-header></app-header>
+<ion-content>
+        <div class="p-container">
+                <header-title></header-title>
+                <p class="p-img-top senelec-logo"></p>
+                <div class="ion-padding p-container-view">
+                  <div *ngIf="!glb.showRecu && !glb.ShowPin">
+                    <form class="list form" >
+                    <fieldset>
+                      <legend>releve</legend>
+                      <div class="field">
+                        <input type="text" [(ngModel)]="numfacture" (input)="vider()"
+                          style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" id="fullname"
+                          placeholder="N° Police/N° Contrat">
+                        <label for="fullname" style="width: 100% !important;">N° Police/N° Contrat</label>
+                      </div>
+                  
+                      <div class="p-group-button">
+                        <button (click)="releve()" [disabled]="!numfacture || numfacture==''"
+                          class="p-btn p-btn-jaune button button-small right-buttons">
+                          afficher
+                        </button>
+                        <button (click)="reset()" class="p-btn p-btn-gris button button-small right-buttons">
+                          Réinitialiser
+                        </button>
+                      </div>
+                    </fieldset>
+                  </form>
+            
+                  <div *ngIf="showdetails">
+                      <div class="proxi-releve" *ngIf="newclient==false">
+                          <hr><span class="titre">Prénom client </span><strong>:</strong> <span class="info">{{infosClient.controls.prenomClient.value }}</span><br>
+                          <span class="titre">Nom client </span><strong>:</strong> <span class="info">{{infosClient.controls.nomClient.value }}</span><br>
+                          <span class="titre">Téléphone</span><strong >:</strong> <span class="info" >{{infosClient.controls.telephone.value}}</span><br>
+                          <span class="titre">Adresse client </span><strong>:</strong> <span class="info">{{infosClient.controls.adresse.value }}</span><br>
+                          <span class="titre">N° Facture/N° Contrat </span><strong>:</strong> <span class="info">{{ factures.IdClient }}</span><br>
+                          <span class="titre">total </span><strong>:</strong> <span class="info">{{total}}</span><br>
+                          <hr>
+                        </div>
+                    <ion-card *ngIf="listefactures" style="margin-left:0px;margin-right:0px;">
+                        <ion-card-header>
+                            <ion-card-subtitle style="text-align: center;">Factures</ion-card-subtitle>
+                            <ion-card-title style="text-align: center; font-size: 16px">Police: {{numfacture}} </ion-card-title>
+                          </ion-card-header>
+                      <ion-item *ngFor="let fact of listefactures">
+                        <ion-label style="font-size:15px">{{fact.type}}-{{fact.numFact}} <p style="font-size:14px">Date Ech:
+                            {{fact.dateEch}}</p>
+                        </ion-label>
+                        <span item-right style="font-size:14px">{{fact.mntTotal|millier}} Fcfa</span>
+                        <ion-checkbox [(ngModel)]="listefactures[fact.id].checked" style="margin-right: 10px;margin-left:-3%;"
+                          slot="start" mode='ios' [checked]="listefactures[fact.id].checked" (click)="handlechecking(fact.id)"
+                          color="proximo"></ion-checkbox>
+                      </ion-item>
+                    </ion-card>
+                    <br>
+                     <div *ngIf="newclient==true">
+                        <form class="list form"  [formGroup]="infosClient">
+                            <ion-label >(*) : Champ obligatoire</ion-label>
+
+                            <div class="field">
+                              <input type="text" formControlName="prenomClient" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" id="prenomClient"   placeholder="(*) Prénom Client">
+                              <label for="prenomClient" style="width: 100% !important;">(*) Prénom Client</label>
+                            </div>
+                            <div class="field">
+                                <input type="text" formControlName="nomClient" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" id="nomClient"   placeholder="(*) Nom Client">
+                                <label for="nomClient" style="width: 100% !important;">(*) Nom Client</label>
+                              </div>
+    
+                            <div class="field">
+                              <input type="text" formControlName="telephone" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" id="phone"   placeholder="(*) Téléphone">
+                              <label for="phone" style="width: 100% !important;">(*) Téléphone</label>
+                            </div>
+                            <div class="field">
+                              <input type="text" formControlName="adresse" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" id="adresse"   placeholder="(*) Adresse">
+                              <label for="adresse" style="width: 100% !important;">(*) Adresse</label>
+                            </div>
+                        </form>
+
+                      </div>
+                    <br>
+                    <button (click)="validerEncaissement()" [disabled]="nombreFacture==0 || infosClient.invalid"
+                      class="p-btn p-btn-vert button button-small right-buttons">
+                      Encaisser
+                    </button>                  
+                  </div>
+                  
+                </div>
+                  <codepin class="p-box padding" *ngIf="glb.ShowPin" [inCommingData]="dataForPin" pagetitle="Entrer votre code Pin"
+                    (change)="eventCapture($event)"></codepin>
+                  <div *ngIf="glb.showRecu && !glb.ShowPin">
+                    <recu-encaissement></recu-encaissement>
+                  </div>
+                </div>
+              </div>
+              <scroll></scroll>
+            
+</ion-content>

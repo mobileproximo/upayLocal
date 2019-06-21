@@ -1,0 +1,114 @@
+
+:host{
+  .fleche{
+    transform: rotate(0deg) !important;
+    transition: transform 0.3s linear 0s;
+  }
+
+  .loadicon{
+    transform: rotate(-90deg);
+}
+        .cardwallet{
+          background: #649CD4;  /* fallback for old browsers */
+          background: -webkit-linear-gradient(to right, #649CD4, #A1C6EA);  /* Chrome 10-25, Safari 5.1-6 */
+          background: linear-gradient(to right, #649CD4, #A1C6EA); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+          min-height: 145px;
+          padding: 5px 15px 15px 11px;
+          position: relative;
+        }
+        
+          .cadran{
+        
+            border-radius: 15px;
+            border: 4px solid;
+            border-color: rgba(228,228,228,0.5) ;
+            color: #003880;
+            margin-right: 14px;
+            width:100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.5);
+            min-height: 50px;
+          }
+        
+          .balance{
+            border-radius: 15px;
+            background-color: #fff;
+            min-height: 100px;
+            margin-top: 12px;
+            padding: 14px;
+            display: flex;
+            box-shadow: 0 1px #FFFFFF inset, 0 1px 3px rgba(34, 25, 25, 0.4);
+            position: absolute;
+            width : calc(100% - 22px);
+          }
+        
+          .welcome{
+            display: flex;
+            flex-direction:column;
+            justify-content: center;
+          }
+        
+          .select-text {
+            min-width: 100px;
+            font-size: 13px;
+          }
+        
+          .select-md {
+            padding: 0px !important;
+          }
+          .select-ios {
+        
+            padding: 0px !important;
+        
+          }
+        
+          ion-slides {
+            display: block;
+            width: 100%;
+            height: 74px !important;
+          }
+        
+          .entete{
+            display: flex;
+            margin-bottom: 5px;
+          }
+        
+          .slide-zoom{
+            padding: 0px 10px 0px 0px;
+          }
+        
+          .paiement{
+            padding: 0px 24px 0px 12px;
+          }
+          .swiper-slide img {
+            max-width: 75px;
+          }
+        
+          .list-ios > .item-block:first-child {
+            border-top: 0px;
+          }
+        
+          .accueil{
+            height: 35px;
+            transition: height 0.3s linear 1.2s;
+          }
+        
+          .anim1{
+            height: 335px;
+          }
+        
+        }
+        
+        .ios, .md {
+        
+          page-home {
+        
+            button {
+              align-items: baseline;
+            }
+        
+          }
+        
+}
