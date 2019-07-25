@@ -6,6 +6,13 @@
           <input type="tel"  (input)="changetel()" (blur)="blurtel()"  (focus)="focustel()" formControlName="telephone"  style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" id="telben" placeholder="Téléphone">
           <label for="telben" style="width: 100% !important;">Telephone</label>
         </div>
+        <ion-label *ngIf="showName">{{displayName}}</ion-label>
+        <ion-item lines="none" (click)="listecontacts()">
+          <ion-button Fill="clear"  >
+              <ion-icon slot="icon-only" name="contacts"></ion-icon>
+            </ion-button>
+            <ion-label>Choisir dans mes contacts</ion-label>
+        </ion-item>
         <div class="field">
           <input type="tel" (blur)="changemontant()" formControlName="montant" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" id="adresseben" placeholder="Montant">
           <label for="adresseben" style="width: 100% !important;">Montant</label>

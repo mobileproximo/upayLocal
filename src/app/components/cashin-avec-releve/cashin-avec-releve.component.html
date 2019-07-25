@@ -26,8 +26,13 @@
         <input type="tel" (input)="changetel()" (focus)="focustel()" (blur)="blurtel()" formControlName="telephone" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" id="badge" [placeholder]="cashindata.libelle">
         <label for="badge" style="width: 100% !important;">{{cashindata.libelle}}</label>
       </div>
-
-
+      <ion-label *ngIf="showName">{{displayName}}</ion-label>
+      <ion-item lines="none" (click)="listecontacts()">
+        <ion-button Fill="clear"  >
+            <ion-icon slot="icon-only" name="contacts"></ion-icon>
+          </ion-button>
+          <ion-label>Choisir dans mes contacts</ion-label>
+      </ion-item>
       <div class="p-button-group">
         <button (click)="validerCashin()"
                 class="p-btn p-btn-vert button button-small right-buttons">

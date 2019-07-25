@@ -88,64 +88,74 @@ vider() {
      // alert(JSON.stringify(reponse));
       this.serv.dismissloadin();
       if (reponse !== false) {
-        if (reponse.returnCode === '0') {
-          this.showdetails = true;
-          this.nombreFacture = 0;
-          if (reponse.Factures.Facture.length) {
-            console.log('taillle possible');
-            this.factures = reponse;
-            this.factures.nomClient = reponse.NomClient;
-            this.factures.numfacture = this.numfacture = reponse.IdClient;
-
-            /*La aussi j'ai remarqué lorqu'il n'ya pas de date d'echeance et que j valide l'operation le serveur se plante c'est pour cela
-             que je mets un champs text vide dans ce cas
-             * */
-            for (let i = 0; i < this.factures.Factures.Facture.length; i++) {
-              this.factures.Factures.Facture[i].checked = false;
-              // si la date d'echeance n'est pas definie
-              if (typeof(this.factures.Factures.Facture[i].dateEch) === 'object') {
-                this.factures.Factures.Facture[i].dateEch = '';
+        if(reponse.returnCode){
+          if (reponse.returnCode === '0') {
+            this.showdetails = true;
+            this.nombreFacture = 0;
+            if (reponse.Factures.Facture.length) {
+              console.log('taillle possible');
+              this.factures = reponse;
+              this.factures.nomClient = reponse.NomClient;
+              this.factures.numfacture = this.numfacture = reponse.IdClient;
+  
+              /*La aussi j'ai remarqué lorqu'il n'ya pas de date d'echeance et que j valide l'operation le serveur se plante c'est pour cela
+               que je mets un champs text vide dans ce cas
+               * */
+              for (let i = 0; i < this.factures.Factures.Facture.length; i++) {
+                this.factures.Factures.Facture[i].checked = false;
+                // si la date d'echeance n'est pas definie
+                if (typeof(this.factures.Factures.Facture[i].dateEch) === 'object') {
+                  this.factures.Factures.Facture[i].dateEch = '';
+                }
+                //  console.log(typeof(this.factures.Factures.Facture[i].dateEch));
+                this.factures.Factures.Facture[i].id = i;
+  
               }
-              //  console.log(typeof(this.factures.Factures.Facture[i].dateEch));
-              this.factures.Factures.Facture[i].id = i;
-
+            } else {
+              this.factures = {};
+              this.factures.NomClient = this.glb.PRENOM + ' ' + this.glb.NOM;
+              this.factures.IdClient = this.numfacture = reponse.IdClient;
+              this.factures.NomOper = reponse.NomOper;
+              this.factures.errorCode = reponse.errorCode;
+              this.factures.errorLabel = reponse.errorLabel;
+              this.factures.nbrFact = reponse.nbrFact;
+              this.factures.returnCode = reponse.returnCode;
+              this.factures.Factures = {};
+  
+  
+              // c'est le tableau qui va contenir ma facture
+              this.factures.Factures.Facture = [];
+              this.factures.Factures.Facture.push(reponse.Factures.Facture);
+              this.factures.Factures.Facture[0].checked = false;
+              this.factures.Factures.Facture[0].id = 0;
+              console.log('une seule facture', this.factures);
             }
-          } else {
-            this.factures = {};
-            this.factures.NomClient = this.glb.PRENOM + ' ' + this.glb.NOM;
-            this.factures.IdClient = this.numfacture = reponse.IdClient;
-            this.factures.NomOper = reponse.NomOper;
-            this.factures.errorCode = reponse.errorCode;
-            this.factures.errorLabel = reponse.errorLabel;
-            this.factures.nbrFact = reponse.nbrFact;
-            this.factures.returnCode = reponse.returnCode;
-            this.factures.Factures = {};
+            this.listefactures = this.factures.Factures.Facture;
+            // Pour le cas de sde on recupere le numero de telephone
+          //  alert(JSON.stringify(this.listefactures))
+  
+            if (typeof (this.listefactures[0].telclient) !== 'object') {
+                this.telephone = this.listefactures[0].telclient;
+                this.hastel = true;
+  
+              } else { this.hastel = false; }
+  
+          } else { this.serv.showError(reponse.errorLabel); }
+        }
+        else{
+          this.serv.showError('Reponse inattendue');
+        }
 
-
-            // c'est le tableau qui va contenir ma facture
-            this.factures.Factures.Facture = [];
-            this.factures.Factures.Facture.push(reponse.Factures.Facture);
-            this.factures.Factures.Facture[0].checked = false;
-            this.factures.Factures.Facture[0].id = 0;
-            console.log('une seule facture', this.factures);
-          }
-          this.listefactures = this.factures.Factures.Facture;
-          // Pour le cas de sde on recupere le numero de telephone
-        //  alert(JSON.stringify(this.listefactures))
-
-          if (typeof (this.listefactures[0].telclient) !== 'object') {
-              this.telephone = this.listefactures[0].telclient;
-              this.hastel = true;
-
-            } else { this.hastel = false; }
-
-        } else { this.serv.showError(reponse.errorLabel); }
       } else {   this.serv.showError('Pas de facture correspondant'); }
 
 
     }).catch(err => {
       this.serv.dismissloadin();
-      this.serv.showError('Impossible d\'atteindre le serveur');
+      if (err.status === 500) {
+        this.serv.showError('Une erreur interne s\'est produite ERREUR 500');
+        } else {
+        this.serv.showError('Impossible d\'atteindre le serveur veuillez réessayer');
+        }
 
     });
   }
@@ -253,6 +263,7 @@ vider() {
       this.serv.posts(this.dataencaissement.encaissementfile, parametre, {}).then(data => {
       this.serv.dismissloadin();
       const reponse: any = JSON.parse(data.data);
+      if(reponse.returnCode){
       if (reponse.returnCode === '0') {
         this.vider();
         this.glb.ShowPin = false;
@@ -288,10 +299,19 @@ vider() {
       } else {
         this.serv.showError(reponse.errorLabel);
       }
+      }else{
+        this.serv.showError('Reponse inattendue');
+
+      }
+
 
     }).catch(err => {
       this.serv.dismissloadin();
-      this.serv.showError('Impossible d\'atteindre le serveur');
+      if (err.status === 500) {
+        this.serv.showError('Une erreur interne s\'est produite ERREUR 500');
+        } else {
+        this.serv.showError('Impossible d\'atteindre le serveur veuillez réessayer');
+        }
 
     });
 
@@ -305,7 +325,7 @@ vider() {
       return false;
     }
     this.dataForPin.operation = 'Encaissement SDE';
-    this.dataForPin.montant = this.total;
+    this.dataForPin.montant = this.total + 500;
     this.glb.modeTransactionnel = true;
     this.glb.ShowPin = true;
 

@@ -25,7 +25,7 @@ export class CodeOTPPage implements OnInit {
   }
 
   ngOnInit() {
-    this.onCommingSms()
+    this.onCommingSms();
   }
   onCommingSms() {
     if (( /(ipad|iphone|ipod|android)/i.test(navigator.userAgent) )) {
@@ -34,6 +34,7 @@ export class CodeOTPPage implements OnInit {
 
         if (!SMS ) { alert( 'SMS plugin not ready' ); return; } else {
           SMS.startWatch(() => {
+            //alert(' listenning ');
 
           }, () => {
             this.serv.showError('Impossible de lire L\'SMS de UPay');
@@ -47,12 +48,12 @@ export class CodeOTPPage implements OnInit {
       alert('need run on mobile device for full functionalities.');
     }
     document.addEventListener('onSMSArrive', (e: any) => {
+       // alert(' recept ' + JSON.stringify(e));
+        const sms: any = e.data;
+        const expediteur = sms.address;
+        const message = sms.body;
 
-      const sms: any = e.data;
-      const expediteur = sms.address;
-      const message = sms.body;
-
-      if (expediteur === 'UPay') {
+        if (expediteur === 'UPay') {
         if (this.glb.READCODEOTP !== message) {
           this.codeotp = message.substring(message.length - 4);
           setTimeout(() => {
@@ -104,12 +105,13 @@ export class CodeOTPPage implements OnInit {
     this.serv.afficheloading();
     this.serv.posts('connexion/checkOTP.php', this.userdata, {}).then(data => {
       const reponse = JSON.parse(data.data);
-
-      if (reponse.returnCode === '0') {
-        this.serv.posts('connexion/souscription.php', this.userdata, {}).then(rep => {
+      if (reponse.returnCode) {
+        if (reponse.returnCode === '0') {
+          this.serv.posts('connexion/souscription.php', this.userdata, {}).then(rep => {
           this.serv.dismissloadin();
           const souscription = JSON.parse(rep.data);
-          if (souscription.returnCode === '0') {
+          if (souscription.returnCode) {
+                      if (souscription.returnCode === '0') {
             this.glb.ShowPin = true;
             this.storage.set('login', this.userdata.login);
             this.serv.showAlert(souscription.returnMsg);
@@ -119,20 +121,36 @@ export class CodeOTPPage implements OnInit {
           } else {
             this.serv.showError(souscription.errorLabel);
           }
+          } else {
+            this.serv.showError('Reponse inattendue');
+          }
+
 
         }).catch(err => {
           this.serv.dismissloadin();
-          this.serv.showError('Impossible d\'atteindre le serveur');
+          if (err.status === 500) {
+            this.serv.showError('Une erreur interne s\'est produit ERREUR 500');
+            } else {
+            this.serv.showError('Impossible d\'atteindre le serveur veuillez réessayer');
+            }
         });
 
       } else {
         this.serv.dismissloadin();
         this.serv.showError(reponse.errorLabel);
       }
+      } else {
+        this.serv.showError('Reponse inattendue ' );
+      }
+
 
     }).catch(err => {
       this.serv.dismissloadin();
-      this.serv.showError('Impossible d\'atteindre le serveur');
+      if (err.status === 500) {
+        this.serv.showError('Une erreur interne s\'est produit ');
+        } else {
+        this.serv.showError('Impossible d\'atteindre le serveur veuillez réessayer');
+        }
     });
 
   }

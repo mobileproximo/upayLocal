@@ -168,7 +168,8 @@ export class ConnexionPage implements OnInit {
     this.serv.posts('connexion/generateOTP.php', userdata, {}).then(data => {
       this.serv.dismissloadin();
       const reponse = JSON.parse(data.data);
-      if (reponse.returnCode === '0') {
+      if (reponse.returnCode) {
+              if (reponse.returnCode === '0') {
         const navigationExtras: NavigationExtras = {
           state: {
             user: userdata
@@ -176,10 +177,18 @@ export class ConnexionPage implements OnInit {
         };
         this.router.navigate(['/connexion/codeotp'], navigationExtras);
       } else { this.serv.showError(reponse.errorLabel); }
+      } else {
+        this.serv.showError('Reponse inattendue  ');
+      }
+
 
     }).catch(err => {
       this.serv.dismissloadin();
-      this.serv.showError('Impossible d\'atteindre le serveur ');
+      if (err.status === 500) {
+      this.serv.showError('Une erreur interne s\'est produite  ERREUR 500');
+      } else {
+      this.serv.showError('Impossible d\'atteindre le serveur veuillez réessayer '+JSON.stringify(err));
+      }
     });
 
 
@@ -215,40 +224,49 @@ export class ConnexionPage implements OnInit {
             params.login = params.login.substring(0, 3) !== '221' ? '221' + params.login : params.login;
             params.login = params.login.replace(/-/g, '');
             params.login = params.login.replace(/ /g, '');
-          //  alert(JSON.stringify(params));
+            //alert(JSON.stringify(params));
             this.serv.afficheloading();
             this.serv.posts('connexion/connexion.php', params, {}).then(data => {
               this.serv.dismissloadin();
               const reponse = JSON.parse(data.data);
               console.log(JSON.stringify(reponse));
               // alert('Connexion ' + JSON.stringify(reponse));
-              if (reponse.returnCode === '0') {
-                  this.glb.HEADER.agence = reponse.agence;
-                  this.glb.IDPART = reponse.idPartn;
-                  this.glb.IDSESS = reponse.idSession;
-                  this.glb.IDTERM = reponse.idTerm;
-                  this.glb.PRENOM = reponse.prenom;
-                  this.glb.PHONE = params.login;
-                  this.glb.PHONE = this.glb.PHONE.substring(3);
-                  this.glb.NOM = reponse.nom;
-                  this.glb.PIN = reponse.pin;
-                  this.oneSignal.sendTags({codeespace: this.glb.HEADER.agence});
-                  if (typeof(reponse.mntPlf) !== 'object') {
-                  this.glb.HEADER.montant = this.monmillier.transform(reponse.mntPlf);
+              if (reponse.returnCode) {
+                  if (reponse.returnCode === '0') {
+                    this.glb.HEADER.agence = reponse.agence;
+                    this.glb.IDPART = reponse.idPartn;
+                    this.glb.IDSESS = reponse.idSession;
+                    this.glb.IDTERM = reponse.idTerm;
+                    this.glb.PRENOM = reponse.prenom;
+                    this.glb.PHONE = params.login;
+                    this.glb.PHONE =  this.glb.PHONE.substring(3);
+                    this.glb.NOM = reponse.nom;
+                    this.glb.PIN = reponse.pin;
+                    this.oneSignal.sendTags({codeespace: this.glb.HEADER.agence});
+                    if (typeof(reponse.mntPlf) !== 'object') {
+                      this.glb.HEADER.montant = this.monmillier.transform(reponse.mntPlf);
                   } else { this.glb.HEADER.montant = 0; }
-                  this.glb.dateUpdate = this.serv.getCurrentDate();
-                  this.glb.HEADER.numcompte = reponse.numcompte;
-                  this.glb.HEADER.consomme = this.monmillier.transform(reponse.consome);
-                  this.navCtrl.navigateRoot('/home');
+                    this.glb.dateUpdate = this.serv.getCurrentDate();
+                    this.glb.HEADER.numcompte = reponse.numcompte;
+                    this.glb.HEADER.consomme = this.monmillier.transform(reponse.consome);
+                    this.navCtrl.navigateRoot('/home');
               } else {
                 if (reponse.errorLabel === 'Code Pin incorrect !') {
                  this.toclear = true;
                 }
                 this.serv.showError(reponse.errorLabel);
               }
+              } else {
+                this.serv.showError('Reponse inattendue' );
+              }
+
             }).catch(error => {
               this.serv.dismissloadin();
-              this.serv.showError('Impossible d\'atteindre le serveur ' );
+              if (error.status === 500) {
+                this.serv.showError('Une erreur interne s\'est produite ERREUR 500');
+                } else {
+                this.serv.showError('Impossible d\'atteindre le serveur veuillez réessayer');
+                }
 
             });
 

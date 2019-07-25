@@ -17,12 +17,14 @@ import { RecuWoyofalComponent } from '../components/recu-woyofal/recu-woyofal.co
 import { RecuEncaissementComponent } from '../components/recu-encaissement/recu-encaissement.component';
 import { ReceptionComponent } from '../components/reception/reception.component';
 import { FormatcodePipe } from '../pipes/formatcode.pipe';
+import { PopoverContactComponent } from '../popover-contact/popover-contact.component';
 
 @NgModule({
   declarations: [HeaderComponent, HeaderTitleComponent, FormatphonePipe,
                 ScrollComponent, RechargeComponent, MillierPipe, FormatcodePipe,
-                CashinAvecReleveComponent, RecuRechargeComponent, ReceptionComponent,
+                CashinAvecReleveComponent, RecuRechargeComponent, ReceptionComponent, PopoverContactComponent,
                 CodepinComponent, EnvoiComponent, RecuTransfertComponent, RecuWoyofalComponent, RecuEncaissementComponent],
+   entryComponents: [PopoverContactComponent],
   imports: [
     CommonModule, IonicModule, FormsModule, ReactiveFormsModule,
   ],
@@ -31,7 +33,7 @@ import { FormatcodePipe } from '../pipes/formatcode.pipe';
             FormsModule,
             ReactiveFormsModule,
             CommonModule,
-            IonicModule, ScrollComponent, FormatphonePipe, ReceptionComponent, FormatcodePipe,
+            IonicModule, ScrollComponent, FormatphonePipe, ReceptionComponent, FormatcodePipe, PopoverContactComponent,
             RechargeComponent, CashinAvecReleveComponent, MillierPipe, RecuWoyofalComponent, RecuEncaissementComponent,
             RecuRechargeComponent, CodepinComponent, EnvoiComponent, RecuTransfertComponent]
 })

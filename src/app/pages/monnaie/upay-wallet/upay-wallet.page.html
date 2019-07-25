@@ -11,13 +11,41 @@
                 <ion-item style="border-bottom: 2px solid #639dd5;border-radius: 10px;margin-bottom:20px; ">
                   <ion-label floating="" style="color:#444 !important;font-family: ubuntuMono !important;" >Type de Service</ion-label>
                   <ion-select style="border-top: none" [(ngModel)]="service" interface="popover">
-                    <ion-select-option>Cashin</ion-select-option>
-                    <ion-select-option>Cashout</ion-select-option>
+                    <ion-select-option value='Cashin'>Dépôt UPay</ion-select-option>
+                    <ion-select-option value='Cashout'>Retrait UPay</ion-select-option>
+                    <ion-select-option value='depotqrcode'>Dépôt UPay QR</ion-select-option>
+                    <ion-select-option value='retraitqrcode'>Retrait UPay QR</ion-select-option> 
                   </ion-select>
                 </ion-item>
               </div>
               <recharge [datarecharge]="datarecharge" *ngIf="service=='Cashin'"></recharge>
               <cashin-avec-releve  [cashindata]="datacashin" *ngIf="service=='Cashout'"></cashin-avec-releve>
+              <div *ngIf="service=='depotqrcode'">
+                  <form>
+                      <fieldset>
+                          <legend>releve</legend>
+                          <div class="field">
+                              <input type="tel" [(ngModel)]="montant" style="border: none; border-bottom: 2px solid #639dd5; width: 100% !important;" name="fullname" id="mnt" placeholder="Montant">
+                              <label for="mnt" style="width: 100% !important;">Montant</label>
+                            </div>
+                            <div class="p-button-group">
+                              <button  (click)="generatecode()" [disabled]="montant<=0"
+                                      class="p-btn p-btn-jaune button button-small right-buttons">
+                                Transferer
+                              </button>
+                              </div>
+
+                              <ion-card style="margin-top: 20%;" *ngIf="affiche">
+                                  <ngx-qrcode [(qrc-value)]="dataqrcode"></ngx-qrcode>
+                                  <p style="padding: 5px;">Lire le code pour recuperer le montant</p>
+                              </ion-card> 
+                      </fieldset>
+          
+                  </form>
+              </div>
+              <div *ngIf="service=='retraitqrcode'">
+                  <ion-button (click)="scanCode()" expand="full">Recuperer le montant</ion-button>
+              </div>
             </div>
             <div *ngIf="glb.showRecu && !glb.ShowPin">
               <recu-recharge></recu-recharge>

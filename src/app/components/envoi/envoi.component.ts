@@ -17,8 +17,8 @@ export class EnvoiComponent implements OnInit {
   dataForPin: any = {};
   showdetails = false;
   constructor(
-              public formdate:FormatdatePipe,
-              public formatcode:FormatcodePipe,
+              public formdate: FormatdatePipe,
+              public formatcode: FormatcodePipe,
               public monmillier: MillierPipe,
               public envServ: ServiceService,
               public formBuilder: FormBuilder,
@@ -56,55 +56,63 @@ export class EnvoiComponent implements OnInit {
 
   }
   changemontant() {
-    this.envoiForm.controls['montantTTC'].setValue('');
-    if (this.envoiForm.controls['montant'].value) {
-      this.envoiForm.controls['montant'].setValue(this.envoiForm.controls['montant'].value.replace(/ /g, ''));
-      this.envoiForm.controls['montant'].setValue(this.envoiForm.controls['montant'].value.replace(/-/g, ''));
-      this.envoiForm.controls['montant'].setValue(this.monmillier.transform(this.envoiForm.controls['montant'].value));
+    this.envoiForm.controls.montantTTC.setValue('');
+    if (this.envoiForm.controls.montant.value) {
+      this.envoiForm.controls.montant.setValue(this.envoiForm.controls.montant.value.replace(/ /g, ''));
+      this.envoiForm.controls.montant.setValue(this.envoiForm.controls.montant.value.replace(/-/g, ''));
+      this.envoiForm.controls.montant.setValue(this.monmillier.transform(this.envoiForm.controls.montant.value));
     }
   }
   reinitialiser() {
     this.envoiForm.reset();
-    this.envoiForm.controls['idville'].setValue(1);
-    this.envoiForm.controls['prenomExp'].setValue(this.glb.PRENOM);
-    this.envoiForm.controls['nomExp'].setValue(this.glb.NOM);
-    this.envoiForm.controls['telExp'].setValue(this.glb.PHONE);
+    this.envoiForm.controls.idville.setValue(1);
+    this.envoiForm.controls.prenomExp.setValue(this.glb.PRENOM);
+    this.envoiForm.controls.nomExp.setValue(this.glb.NOM);
+    this.envoiForm.controls.telExp.setValue(this.glb.PHONE);
     this.showdetails = false;
 
   }
   getIndicatif(pays) {
     const indicatif = pays.callingCodes[0];
     console.log(JSON.stringify(indicatif));
-    this.envoiForm.controls['indicatif'].setValue(indicatif);
+    this.envoiForm.controls.indicatif.setValue(indicatif);
 
   }
   calculerFrais() {
     this.showdetails = false;
-    this.envoiForm.controls['mntTarif'].setValue('');
-    this.envoiForm.controls['montantTTC'].setValue('');
-    const parametre : any = {};
+    this.envoiForm.controls.mntTarif.setValue('');
+    this.envoiForm.controls.montantTTC.setValue('');
+    const parametre: any = {};
     parametre.oper = this.dataenvoi.oper;
     parametre.idTerm = this.glb.IDTERM;
     parametre.session = this.glb.IDSESS;
-    parametre.montant = this.envoiForm.controls['montant'].value.replace(/ /g, '');
-    parametre.lieu = this.envoiForm.controls['idville'].value;
+    parametre.montant = this.envoiForm.controls.montant.value.replace(/ /g, '');
+    parametre.lieu = this.envoiForm.controls.idville.value;
     this.envServ.afficheloading();
     this.envServ.posts('transfert/calculfrais.php', parametre, {}).then(data => {
       this.envServ.dismissloadin();
-      const reponse : any = JSON.parse(data.data);
-      if (reponse.returnCode == '0') {
+      const reponse: any = JSON.parse(data.data);
+      if (reponse.returnCode) {
+              if (reponse.returnCode === '0') {
         this.showdetails = true;
-        this.envoiForm.controls['montant'].setValue(this.monmillier.transform(parametre.montant));
-        this.envoiForm.controls['mntTarif'].setValue(this.monmillier.transform(reponse.mntTarif));
-        let mttc : any = reponse.mntTarif * 1 + parametre.montant * 1;
+        this.envoiForm.controls.montant.setValue(this.monmillier.transform(parametre.montant));
+        this.envoiForm.controls.mntTarif.setValue(this.monmillier.transform(reponse.mntTarif));
+        let mttc: any = reponse.mntTarif * 1 + parametre.montant * 1;
         mttc += '';
-        this.envoiForm.controls['montantTTC'].setValue(this.monmillier.transform(mttc));
-      } else this.envServ.showError(reponse.errorLabel);
+        this.envoiForm.controls.montantTTC.setValue(this.monmillier.transform(mttc));
+      } else { this.envServ.showError(reponse.errorLabel); }
+      } else {
+        this.envServ.showError('Reponse inattendue');
+      }
+
 
     }).catch(err => {
       this.envServ.dismissloadin();
-      this.envServ.showError('Impossible d\'atteindre le serveur');
-
+      if (err.status === 500) {
+        this.envServ.showError('Une erreur interne s\'est produite ERREUR 500');
+        } else {
+        this.envServ.showError('Impossible d\'atteindre le serveur veuillez réessayer');
+        }
     });
 
   }
@@ -114,7 +122,7 @@ export class EnvoiComponent implements OnInit {
       parametres.image = this.dataenvoi.image;
       parametres.oper = this.dataenvoi.oper;
       parametres.recharge = {};
-      parametres.recharge.montant = this.envoiForm.controls['montantTTC'].value;
+      parametres.recharge.montant = this.envoiForm.controls.montantTTC.value;
       parametres.operation = 'Envoi';
       parametres.denv = this.envoiForm.getRawValue();
       parametres.session = this.glb.IDSESS;
@@ -124,7 +132,8 @@ export class EnvoiComponent implements OnInit {
       this.envServ.posts('transfert/envoicash.php', parametres, {}).then(data => {
         this.envServ.dismissloadin();
         const reponse: any = JSON.parse(data.data);
-        if (reponse.returnCode === '0') {
+        if (reponse.returnCode){
+                  if (reponse.returnCode === '0') {
           this.glb.recu = reponse;
           this.glb.HEADER.montant = this.monmillier.transform(reponse.mntPlfap);
           this.glb.dateUpdate = this.envServ.getCurrentDate();
@@ -139,10 +148,20 @@ export class EnvoiComponent implements OnInit {
         } else {
           this.envServ.showError(reponse.errorLabel);
         }
+        }
+        else{
+          this.envServ.showError('Reponse inattendue');
+
+        }
+
 
       }).catch(err => {
         this.envServ.dismissloadin();
-        this.envServ.showError('impossible d\'atteindre le serveur');
+        if (err.status === 500) {
+          this.envServ.showError('Une erreur interne s\'est produite ERREUR 500');
+          } else {
+          this.envServ.showError('Impossible d\'atteindre le serveur veuillez réessayer');
+          }
       });
 
     }

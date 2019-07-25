@@ -4,6 +4,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MillierPipe } from 'src/app/pipes/millier.pipe';
 import { GlobaleVariableService } from 'src/app/service/globale-variable.service';
 import { FormatphonePipe } from 'src/app/pipes/formatphone.pipe';
+import { Contacts } from '@ionic-native/contacts/ngx';
+import { PopoverContactComponent } from 'src/app/popover-contact/popover-contact.component';
+import { PopoverController } from '@ionic/angular';
 
 @Component({
   selector: 'recharge',
@@ -16,14 +19,18 @@ export class RechargeComponent implements OnInit {
   @Input() datarecharge: any = {};
   label: string;
   dataForPin: any = {};
-
-
+  phones: any;
+  displayName: any;
+  showName = false;
   ngOnInit() {}
 
 
   constructor( public formatphone: FormatphonePipe,
                public millier: MillierPipe, public formbuilder: FormBuilder,
-               public serv: ServiceService, public glb: GlobaleVariableService) {
+               public serv: ServiceService, public glb: GlobaleVariableService,
+               public contacts: Contacts,
+               public popover: PopoverController,
+               public contact: Contacts) {
     this.rechargeForm = this.formbuilder.group({
       telephone: ['', Validators.required],
       montant: ['', Validators.required],
@@ -34,6 +41,7 @@ export class RechargeComponent implements OnInit {
     this.glb.modeTransactionnel = false;
   }
   changetel() {
+    this.showName = false;
     console.log('change');
     this.rechargeForm.controls.telephone.setValue(this.rechargeForm.controls.telephone.value.replace(/ /g, ''));
     this.rechargeForm.controls.telephone.setValue(this.rechargeForm.controls.telephone.value.replace(/-/g, ''));
@@ -86,7 +94,81 @@ export class RechargeComponent implements OnInit {
     }
     this.glb.ShowPin = false;
   }
+  listecontacts() {
+    this.showName = false;
+    this.contact.pickContact().then(numbers => {
+      this.displayName  = numbers.displayName;
+     // alert(JSON.stringify(numbers));
+      const nombre = numbers.phoneNumbers.length;
+      // le contact a plusieurs numero
+      if (nombre > 1) {
 
+        this.phones = [];
+        for (const telephone of numbers.phoneNumbers) {
+          this.phones.push(telephone.value);
+        }
+        this.showContacsNumbers();
+      } else {
+        const value = this.getphone(numbers.phoneNumbers[0].value);
+        this.setTelephoneFromselection(value);
+      }
+    }).catch(err => {
+    //  alert("erreur " + JSON.stringify(err));
+    });
+  }
+  // Afiicher les numeros du contact si plusieurs
+async  showContacsNumbers() {
+  const popover = await this.popover.create({
+    component: PopoverContactComponent,
+    componentProps: {phones: this.phones},
+    translucent: true
+  });
+  popover.onDidDismiss().then((dataReturned) => {
+    if (dataReturned.data) {
+      const value = this.getphone(dataReturned.data);
+      this.setTelephoneFromselection(value);
+    }
+  });
+  return await popover.present();
+}
 
+setTelephoneFromselection(value) {
+  this.showName = false;
+  if (value === '') {
+    this.serv.showToast('Numéro de téléphone incorrect!');
+  } else {
+    this.showName = true;
+    this.rechargeForm.controls.telephone.setValue(value);
+  }
+}
+getphone(selectedPhone) {
+  let tel = selectedPhone.replace(/ /g, '');
+  if (isNaN(tel * 1)) {
+    console.log('Not a number');
+    return '';
+  }
+  tel = tel * 1 + '';
+  if (tel.substring(0, 3) === '221') {
+    tel = tel.substring(3, tel.length);
+  }
+  const  numeroautorisé = ['77', '78', '70', '76'];
+  const retour = numeroautorisé.indexOf(tel.substring(0, 2));
+  if (retour === -1) {
+    console.log('Not a in array');
 
+    return '';
+  }
+  tel =  tel.replace(/ /g, '');
+  tel = tel.replace(/-/g, '');
+  let  phone = tel.length >= 2 ? tel.substring(0, 2) + '-' : '';
+  phone += tel.length > 5 ? tel.substring(2, 5) + '-' : '';
+  phone += tel.length > 7 ? tel.substring(5, 7) + '-' : '';
+  phone += tel.length >= 8 ? tel.substring(7, 9) : '';
+  if (phone.length !== 12) {
+    console.log('Not a 12');
+
+    return '';
+  }
+  return phone;
+}
 }

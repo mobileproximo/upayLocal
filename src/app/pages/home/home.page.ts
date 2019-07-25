@@ -53,8 +53,8 @@ export class HomePage implements OnInit {
                  {nom: 'monnaie/emoney', icone: this.glb.IMAGE_BASE_URL + 'emoney.png'},
                  {nom: 'monnaie/wizall', icone: this.glb.IMAGE_BASE_URL + 'wizall.png'},
                  {nom: 'monnaie/postcash', icone: this.glb.IMAGE_BASE_URL + 'postecash.png'},
-                 {nom: 'monnaie/upaywallet', icone: this.glb.IMAGE_BASE_URL + 'upay.png'},
-                {nom: 'monnaie/transfertuv', icone: this.glb.IMAGE_BASE_URL + 'tiw.png'}
+                 {nom: 'monnaie/upaywallet', icone: this.glb.IMAGE_BASE_URL + 'logo_upay.jpg'},
+                 {nom: 'monnaie/transfertuv', icone: this.glb.IMAGE_BASE_URL + 'tiw.png'}
                 ]
     },
        { title: 'Gestion',  src: this.glb.IMAGE_BASE_URL + 'Petite-Icon-06.png', expanded: false,

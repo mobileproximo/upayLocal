@@ -86,7 +86,8 @@ export class SenelecPage implements OnInit {
         // alert("ReleveFacture "+JSON.stringify(reponse));
         // this.serv.dismissloadin();
         if (reponse !== false) {
-          if (reponse.returnCode === '0') {
+          if (reponse.returnCode) {
+                      if (reponse.returnCode === '0') {
             this.showdetails = true;
             this.nombreFacture = 0;
             this.serv.posts('encaissement/releveClient.php', parametre, {}).then(dataclient => {
@@ -145,6 +146,8 @@ export class SenelecPage implements OnInit {
 
           } else {
             this.serv.showError(reponse.errorLabel); }
+          } else {  this.serv.showError('Reponse inattendu'); }
+
         } else {
           this.serv.showError('Pas de facture correspondant');
         }
@@ -152,7 +155,11 @@ export class SenelecPage implements OnInit {
 
       }).catch(err => {
         this.serv.dismissloadin();
-        this.serv.showError('Impossible d\'atteindre le serveur');
+        if (err.status === 500) {
+          this.serv.showError('Une erreur interne s\'est produite ERREUR 500');
+          } else {
+          this.serv.showError('Impossible d\'atteindre le serveur veuillez réessayer');
+          }
 
       });
     }
@@ -211,7 +218,7 @@ export class SenelecPage implements OnInit {
       if (this.glb.modeTransactionnel) {
         const parametre: any = {};
         parametre.infoclient = {};
-        parametre.infoclient.nomClient = this.infosClient.controls.nomClient.value; ;
+        parametre.infoclient.nomClient = this.infosClient.controls.nomClient.value; 
         parametre.infoclient.numfacture = this.numfacture;
         parametre.infoclient.prenomClient = this.infosClient.controls.prenomClient.value;
         parametre.infoclient.idclient = this.factures.IdClient;
@@ -232,6 +239,7 @@ export class SenelecPage implements OnInit {
         this.serv.posts(this.dataencaissement.encaissementfile, parametre, {}).then(data => {
         this.serv.dismissloadin();
         const reponse: any = JSON.parse(data.data);
+        if(reponse.returnCode){
         if (reponse.returnCode === '0') {
         this.glb.ShowPin = false;
         this.glb.recu = reponse;
@@ -266,10 +274,18 @@ export class SenelecPage implements OnInit {
         } else {
           this.serv.showError(reponse.errorLabel);
         }
+        }else{
+          this.serv.showError("Reponse inattendue");
+
+        }
+
 
       }).catch(err => {
         this.serv.dismissloadin();
-        this.serv.showError('Impossible d\'atteindre le serveur ' + JSON.stringify(err));
+        if (err.status === 500) {
+          this.serv.showError('Une erreur interne s\'est produite ERREUR 500');
+          } else {
+          this.serv.showError('Impossible d\'atteindre le serveur veuillez réessayer');}
 
       });
 

@@ -14,6 +14,7 @@ import { PostcashPage } from './postcash/postcash.page';
 import { TigocashPage } from './tigocash/tigocash.page';
 import { UpayWalletPage } from './upay-wallet/upay-wallet.page';
 import { TransfertUniteValeurPage } from './transfert-unite-valeur/transfert-unite-valeur.page';
+import { NgxQRCodeModule } from 'ngx-qrcode2';
 
 const routes: Routes = [
   {
@@ -54,7 +55,7 @@ const routes: Routes = [
 @NgModule({
   imports: [
     SharedModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes), NgxQRCodeModule
   ],
   declarations: [MonnaiePage, OrangeMoneyPage, EmoneyPage, PostcashPage, WizallPage, TigocashPage, UpayWalletPage, TransfertUniteValeurPage]
 })

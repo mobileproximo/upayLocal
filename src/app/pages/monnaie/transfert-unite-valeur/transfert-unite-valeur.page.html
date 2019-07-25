@@ -10,8 +10,8 @@
             <ion-label floating="" style="color:#444 !important;font-family: ubuntuMono !important;" >Selectionner un Wallet Source</ion-label>
             <ion-select style="border-top: none" [(ngModel)]="service" interface="popover" (ionChange)="onWalletChange()">
               <ion-select-option value="0005">Orange Money</ion-select-option>
-              <ion-select-option value="0022">Tigo Cash</ion-select-option>
-              <ion-select-option value="0057">Wizall</ion-select-option>
+<!--               <ion-select-option value="0022">Tigo Cash</ion-select-option>
+ -->              <ion-select-option value="0057">Wizall</ion-select-option>
               <ion-select-option value="0054">E-Money</ion-select-option>
             </ion-select>
           </ion-item>
@@ -30,8 +30,14 @@
                     class="p-btn p-btn-jaune button button-small right-buttons">
               Transferer
             </button>
-  
           </div>
+<!--             <div class="p-button-group">
+              <button  (click)="cashin()" [disabled]="rechargeForm.controls['montantrlv'].value<=0"
+                      class="p-btn p-btn-jaune button button-small right-buttons">
+                TestcashinMoga
+              </button>
+  
+          </div> -->
         </fieldset>
     
 <!--         <fieldset *ngIf="montantrelve>0">

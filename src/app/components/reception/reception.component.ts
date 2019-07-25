@@ -68,6 +68,7 @@ export class ReceptionComponent implements OnInit {
     this.serv.dismissloadin();
     const reponse = JSON.parse(data.data);
   //  alert(JSON.stringify(reponse))
+    if (reponse.returnCode) {
     if (reponse.returnCode === '0') {
       this.showdetails = true;
       this.cashoutForm.controls.prenomExp.setValue(reponse.prenomExp);
@@ -94,10 +95,18 @@ export class ReceptionComponent implements OnInit {
       }
 
     } else { this.serv.showError(reponse.errorLabel); }
+    }
+    else{
+      this.serv.showError('Réponse inattendue ');
+    }
+
   }).catch(err => {
     this.serv.dismissloadin();
-    this.serv.showError('Impossible d\'atteindre le serveur ');
-    }
+    if (err.status === 500) {
+      this.serv.showError('Une erreur interne s\'est produite ERREUR 500');
+      } else {
+      this.serv.showError('Impossible d\'atteindre le serveur veuillez réessayer');
+      }    }
   );
 
     this.reset();
@@ -129,6 +138,7 @@ export class ReceptionComponent implements OnInit {
     this.serv.posts('transfert/ReceptionCash.php', parametre, {}).then(data => {
       this.serv.dismissloadin();
       const reponse = JSON.parse(data.data);
+      if (reponse.returnCode) {
       if (reponse.returnCode === '0') {
         this.glb.recu = reponse;
         this.glb.recu.operation = 'RECEPTION';
@@ -142,11 +152,19 @@ export class ReceptionComponent implements OnInit {
         this.glb.showRecu = true;
 
       } else { this.serv.showError(reponse.errorLabel) }
+      }else{
+        this.serv.showError('Reponse inattendue');
+
+      }
+
 
     }).catch(err => {
       this.serv.dismissloadin();
-      this.serv.showError('Impossible d\'atteindre le serveur');
-    });
+      if (err.status === 500) {
+        this.serv.showError('Une erreur interne s\'est produite ERREUR 500');
+        } else {
+        this.serv.showError('Impossible d\'atteindre le serveur veuillez réessayer');
+        }     });
 
   }
   this.glb.ShowPin = false;

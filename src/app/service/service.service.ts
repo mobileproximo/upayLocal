@@ -47,7 +47,10 @@ export class ServiceService {
           this.glb.isLoadingShowing = true;
           console.log('presented');
           if (!this.loading) {
-            a.dismiss().then(() => console.log('abort presenting'));
+            a.dismiss().then(() => {
+              console.log('abort presenting');
+              this.glb.isLoadingShowing = false;
+            });
           }
         });
       });
@@ -57,8 +60,9 @@ export class ServiceService {
 
   async dismissloadin() {
     this.loading = false;
-    this.glb.isLoadingShowing = false;
-    return await this.loadingCtrl.dismiss().then(() => console.log('dismissed'));
+    return await this.loadingCtrl.dismiss().then(() => {
+      this.glb.isLoadingShowing = false;
+      console.log('dismissed');});
   }
   async presentLoading() {
     const loading = await this.loadingCtrl.create({
@@ -114,8 +118,9 @@ export class ServiceService {
       console.log(url);
       console.log(body);
       this.http.setDataSerializer('json');
+
       this.http.setSSLCertMode('nocheck');
-      // this.http.setRequestTimeout(60);
+      this.http.setRequestTimeout(90);
       return this.http.post(url, body, headers);
     }
 
@@ -123,6 +128,28 @@ export class ServiceService {
 
 
   }
+  post(service: string, body: any = {}, headers: any = {}): any {
+  /*   this.checkNetwork();*/
+    if (this.glb.ISCONNECTED === false) {
+      this.showToast('Veuillez revoir votre connexion internet !');
+      return ;
+    } else {
+      const url =  service;
+      console.log(headers);
+      console.log(url);
+      console.log(body);
+      this.http.setDataSerializer('json');
+
+      this.http.setSSLCertMode('nocheck');
+      this.http.setRequestTimeout(90);
+      return this.http.post(url, body, headers);
+    }
+
+
+
+
+  }
+
     showError(text: string= 'Erreur Non reconnue.Veuillez contacter le SUPPORT') {
 
       this.alertCtrl.create({
@@ -204,7 +231,8 @@ recharger(datarecharge) {
   this.posts('recharge/' + file + '.php', parametres, {}).then(data => {
     this.dismissloadin();
     const reponse = JSON.parse(data.data);
-    if (reponse.returnCode === '0') {
+    if (reponse.returnCode) {
+          if (reponse.returnCode === '0') {
       this.glb.recu = reponse;
       if (typeof (reponse.telRech) === 'object') {
         this.glb.recu.telRech = datarecharge.recharge.telephone;
@@ -221,9 +249,17 @@ recharger(datarecharge) {
       this.glb.recu.Oper = datarecharge.operateur;
 
     } else { this.showError(reponse.errorLabel); }
+    } else {
+      this.showError('Reponse inattendue' );
+
+    }
+
   }).catch(err => {
-    this.dismissloadin();
-    this.showError('Impossible d\'atteindre le serveur');
+    if (err.status === 500) {
+      this.showError('Une erreur interne s\'est produite ERREUR 500');
+      } else {
+      this.showError('Impossible d\'atteindre le serveur veuillez réessayer');
+      }
 
   });
 

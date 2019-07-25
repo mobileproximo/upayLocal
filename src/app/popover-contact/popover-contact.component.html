@@ -1,0 +1,9 @@
+<ion-list>
+  <ion-list-header>
+      <ion-label>Selectionnez un numéro</ion-label>
+    </ion-list-header>
+  <ion-item *ngFor="let phone of listphones" (click)="dismiss(phone)">
+    <ion-label>{{phone}}</ion-label>
+  </ion-item>
+
+</ion-list>

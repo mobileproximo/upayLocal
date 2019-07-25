@@ -60,31 +60,39 @@ export class WoyofalPage implements OnInit {
       this.serv.dismissloadin();
       const reponse: any = JSON.parse(data.data);
       // alert(JSON.stringify(reponse));
-      if (reponse.returnCode === '0') {
-        this.showdetails = true;
-        this.client = reponse;
-        this.clientForm.controls.NomClient.setValue(reponse.NomClient);
-        this.clientForm.controls.telClient.setValue(reponse.telClient);
-        this.clientForm.controls.IdClient.setValue(reponse.IdClient);
-        this.clientForm.controls.numcompteur.setValue(reponse.IdClient);
-        this.clientForm.controls.adrsClient.setValue(reponse.adrsClient);
-        this.client.telClient = this.phoneformat.transform(reponse.telClient);
-        this.newclient = false;
-
-      } else {
-        if (reponse.errorLabel === 'Nom Client inconnu') {
-          this.clientForm.controls.IdClient.setValue(parametre.numpolice);
-
-          this.showdetails = this.newclient = true;
-
-        } else { this.serv.showError(reponse.errorLabel); }
+      if (reponse.returnCode){
+        if (reponse.returnCode === '0') {
+          this.showdetails = true;
+          this.client = reponse;
+          this.clientForm.controls.NomClient.setValue(reponse.NomClient);
+          this.clientForm.controls.telClient.setValue(reponse.telClient);
+          this.clientForm.controls.IdClient.setValue(reponse.IdClient);
+          this.clientForm.controls.numcompteur.setValue(reponse.IdClient);
+          this.clientForm.controls.adrsClient.setValue(reponse.adrsClient);
+          this.client.telClient = this.phoneformat.transform(reponse.telClient);
+          this.newclient = false;
+  
+        } else {
+          if (reponse.errorLabel === 'Nom Client inconnu') {
+            this.clientForm.controls.IdClient.setValue(parametre.numpolice);
+  
+            this.showdetails = this.newclient = true;
+  
+          } else { this.serv.showError(reponse.errorLabel); }
+        }
       }
+      else{
+        this.serv.showError('Reponse inattendue');
+      }
+
 
 
     }).catch(err => {
       this.serv.dismissloadin();
-      this.serv.showError('Impossible d\'atteindre le serveur');
-    });
+      if (err.status === 500) {
+        this.serv.showError('Une erreur interne s\'est produite ERREUR 500');
+        } else {
+        this.serv.showError('Impossible d\'atteindre le serveur veuillez réessayer');}    });
   }
   vider() {
     this.showdetails = false;
@@ -157,29 +165,39 @@ export class WoyofalPage implements OnInit {
       this.serv.dismissloadin();
       const reponse = JSON.parse(data.data);
       // alert(JSON.stringify(reponse))
-      if (reponse.returnCode === '0') {
-        this.vider();
-        this.glb.recu = reponse;
-        this.glb.recu.guichet = this.glb.IDTERM.substring(5, 6);
-        this.glb.recu.agence = this.glb.HEADER.agence;
-        this.glb.HEADER.montant = this.monmillier.transform(reponse.mntPlfap);
-        this.glb.dateUpdate = this.serv.getCurrentDate();
-        this.glb.recu.dtTrx = this.dateformat.transform(reponse.dtTrx);
-        this.glb.recu.numTrx = reponse.numTrx;
-        this.glb.recu.Token2 = typeof (reponse.Token3) !== 'object' ? this.formatagechaine.transform(reponse.Token2, 5, '-') : '';
-        this.glb.recu.Token3 = typeof (reponse.Token3) !== 'object' ? this.formatagechaine.transform(reponse.Token3, 5, '-') : '';
-        this.glb.recu.Token1 = this.formatagechaine.transform(reponse.Token1, 5, '-');
-        this.glb.recu.mntFrais = this.monmillier.transform(reponse.mntFrais);
-        this.glb.recu.mntFact = this.monmillier.transform(reponse.mntFact);
-        this.glb.recu.mntTotal = this.monmillier.transform(reponse.mntTotal);
-        this.clientForm.reset();
-        this.glb.showRecu = true;
-      } else {
-        this.serv.showError(reponse.errorLabel);
+      if(reponse.returnCode){
+        if (reponse.returnCode === '0') {
+          this.vider();
+          this.glb.recu = reponse;
+          this.glb.recu.guichet = this.glb.IDTERM.substring(5, 6);
+          this.glb.recu.agence = this.glb.HEADER.agence;
+          this.glb.HEADER.montant = this.monmillier.transform(reponse.mntPlfap);
+          this.glb.dateUpdate = this.serv.getCurrentDate();
+          this.glb.recu.dtTrx = this.dateformat.transform(reponse.dtTrx);
+          this.glb.recu.numTrx = reponse.numTrx;
+          this.glb.recu.Token2 = typeof (reponse.Token3) !== 'object' ? this.formatagechaine.transform(reponse.Token2, 5, '-') : '';
+          this.glb.recu.Token3 = typeof (reponse.Token3) !== 'object' ? this.formatagechaine.transform(reponse.Token3, 5, '-') : '';
+          this.glb.recu.Token1 = this.formatagechaine.transform(reponse.Token1, 5, '-');
+          this.glb.recu.mntFrais = this.monmillier.transform(reponse.mntFrais);
+          this.glb.recu.mntFact = this.monmillier.transform(reponse.mntFact);
+          this.glb.recu.mntTotal = this.monmillier.transform(reponse.mntTotal);
+          this.clientForm.reset();
+          this.glb.showRecu = true;
+        } else {
+          this.serv.showError(reponse.errorLabel);
+        }
+      }else{
+        this.serv.showError('reponse inattendue');
+
       }
+
     }).catch(err => {
       this.serv.dismissloadin();
-      this.serv.showError('Impossible d\'atteindre le serveur');
+      if (err.status === 500) {
+        this.serv.showError('Une erreur interne s\'est produite ERREUR 500');
+        } else {
+        this.serv.showError('Impossible d\'atteindre le serveur veuillez réessayer');
+        }
     });
 
 
