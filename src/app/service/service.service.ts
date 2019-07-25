@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Toast } from '@ionic-native/toast/ngx';
-import { LoadingController, AlertController } from '@ionic/angular';
+import { LoadingController, AlertController, NavController } from '@ionic/angular';
 import { GlobaleVariableService } from './globale-variable.service';
 import { HTTP } from '@ionic-native/http/ngx';
 import { MillierPipe } from '../pipes/millier.pipe';
@@ -13,7 +13,8 @@ export class ServiceService {
   loading = false;
   constructor(private alertCtrl: AlertController, private http: HTTP, public monmillier: MillierPipe,
               private toast: Toast, public loadingCtrl: LoadingController, private glb: GlobaleVariableService,
-              private network: Network) { }
+              private network: Network,
+              public navCtrl: NavController) { }
   showToast(message) {
     this.toast.showLongCenter(message).subscribe(value => {
       console.log(value);
@@ -164,6 +165,9 @@ export class ServiceService {
       this.dismissloadin();
       }
       res.present();
+      if (text === 'Session expiree. Veuillez vous reconnecter!') {
+        this.navCtrl.navigateRoot('connexion');
+      }
     });
 }
 getLabelOperator(codeOper: string, codeSousop: string) {
